@@ -1,10 +1,10 @@
-# Examenopdracht Front-end Web Development / Web Services
+# Examenopdracht Web Services
 
 > Schrap hierboven wat niet past
 
-- Student: VOORNAAM NAAM
-- Studentennummer: xxxxxxxxx
-- E-mailadres: voornaam.naam@student.hogent.be
+- Student: FLORIS BUYSE
+- Studentennummer: 202080000
+- E-mailadres: floris.buyse@student.hogent.be
 
 ## Vereisten
 
