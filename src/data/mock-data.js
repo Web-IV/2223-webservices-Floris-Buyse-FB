@@ -24,23 +24,17 @@ let LOCATIES = [{
 let TOESTELLEN = [{
     id: 1,
     type: 'bodyweight',
-    locatie: {
-      id: 3
-    }
+    locatieid: 3
   },
   {
     id: 2,
     type: 'gewicht',
-    locatie: {
-      id: 1
-    }
+    locatieid: 1
   },
   {
     id: 3,
     type: 'bodyweight',
-    locatie: {
-      id: 2
-    }
+    locatieid: 2
   },
 ];
 
@@ -48,41 +42,31 @@ let OEFENINGEN = [{
     id: 1,
     spiergroep: 'triceps',
     moeilijkheidsgraad: 'medium',
-    toestel: {
-      id: 1
-    }
+    toestelid: 1
   },
   {
     id: 2,
     spiergroep: 'biceps',
     moeilijkheidsgraad: 'medium',
-    toestel: {
-      id: 2
-    }
+    toestelid: 2
   },
   {
     id: 3,
     spiergroep: 'abs',
     moeilijkheidsgraad: 'hard',
-    toestel: {
-      id: 3
-    }
+    toestelid: 3
   },
   {
     id: 4,
     spiergroep: 'quadriceps',
     moeilijkheidsgraad: 'easy',
-    toestel: {
-      id: 1
-    }
+    toestelid: 1
   },
   {
     id: 5,
     spiergroep: 'calves',
     moeilijkheidsgraad: 'easy',
-    toestel: {
-      id: 1
-    }
+    toestelid: 1
   },
 ];
 
