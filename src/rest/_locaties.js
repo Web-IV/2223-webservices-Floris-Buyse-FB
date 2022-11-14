@@ -2,11 +2,11 @@ const Router = require('@koa/router');
 const locatieService = require('../service/locatie');
 
 const getLocaties = async (ctx) => {
-  ctx.body = locatieService.getAll();
+  ctx.body = await locatieService.getAll();
 };
 
 const getLocatiesById = async (ctx) => {
-  ctx.body = locatieService.getById(ctx.params.id);
+  ctx.body = await locatieService.getById(ctx.params.id);
 };
 
 const createLocatie = async (ctx) => {

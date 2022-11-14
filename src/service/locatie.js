@@ -4,15 +4,15 @@ let {
   OEFENINGEN
 } = require('../data/mock-data');
 
-const getAll = () => {
-  return {
+const getAll = async () => {
+  return Promise.resolve({
     items: LOCATIES,
     count: LOCATIES.length
-  };
+  });
 };
 
-const getById = (id) => {
-  return LOCATIES.find(l => l.id === parseInt(id));
+const getById = async (id) => {
+  return Promise.resolve(LOCATIES.find(l => l.id === parseInt(id)));
 };
 
 const create = ({
