@@ -6,27 +6,35 @@ const {
   getLogger
 } = require('./core/logging');
 const installRest = require('./rest/index');
+const {
+  initializeDatabase
+} = require('./data/index');
 
 
 const NODE_ENV = config.get('env');
 const LOG_LEVEL = config.get('log.level');
 const LOG_DISABLED = config.get('log.disabled');
 
-initializeLogger({
-  level: LOG_LEVEL,
-  disabled: LOG_DISABLED,
-  defaultMeta: {
-    NODE_ENV
-  },
-});
+const main = async () => {
 
-const app = new Koa();
+  initializeLogger({
+    level: LOG_LEVEL,
+    disabled: LOG_DISABLED,
+    defaultMeta: {
+      NODE_ENV
+    },
+  });
 
-const logger = getLogger();
+  const app = new Koa();
 
-app.use(bodyParser());
+  const logger = getLogger();
 
-installRest(app);
+  app.use(bodyParser());
 
-app.listen(9000);
-logger.info("server started");
+  installRest(app);
+
+  app.listen(9000);
+  logger.info("server started");
+}
+
+main();
