@@ -4,6 +4,8 @@ let {
   OEFENINGEN
 } = require('../data/mock-data');
 
+const toestelRepo = require('../repository/toestel');
+
 const getAll = () => {
   return {
     items: TOESTELLEN,
@@ -11,8 +13,8 @@ const getAll = () => {
   };
 };
 
-const getById = (id) => {
-  return TOESTELLEN.find(t => t.id === parseInt(id));
+const getById = async (id) => {
+  return await toestelRepo.getById(id);
 };
 
 const create = ({

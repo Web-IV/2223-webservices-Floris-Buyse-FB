@@ -6,7 +6,7 @@ const getToestellen = async (ctx) => {
 };
 
 const getToestellenById = async (ctx) => {
-  ctx.body = toestelService.getById(ctx.params.id);
+  ctx.body = await toestelService.getById(ctx.params.id);
 };
 
 const createToestel = async (ctx) => {

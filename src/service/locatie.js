@@ -3,12 +3,14 @@ let {
   TOESTELLEN,
   OEFENINGEN
 } = require('../data/mock-data');
+const locatieRepo = require('../repository/locatie');
 
 const getAll = async () => {
-  return Promise.resolve({
-    items: LOCATIES,
-    count: LOCATIES.length
-  });
+  const locaties = await locatieRepo.getAll();
+  return {
+    items: locaties,
+    count: locaties.lenght
+  }
 };
 
 const getById = async (id) => {
