@@ -10,7 +10,6 @@ const {
   initializeDatabase
 } = require('./data/index');
 
-
 const NODE_ENV = config.get('env');
 const LOG_LEVEL = config.get('log.level');
 const LOG_DISABLED = config.get('log.disabled');
@@ -25,6 +24,7 @@ const main = async () => {
     },
   });
 
+  await initializeDatabase();
   const app = new Koa();
 
   const logger = getLogger();

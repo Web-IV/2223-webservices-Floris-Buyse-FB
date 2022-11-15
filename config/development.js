@@ -4,8 +4,9 @@ module.exports = {
     disabled: false
   },
   database: {
-    database: '',
-    host: 'localhost',
-    dialect: 'mysql',
+    host: '127.0.0.1',
+    port: 3306,
+    database: 'openluchtfitness',
+    client: 'mysql2'
   }
 }

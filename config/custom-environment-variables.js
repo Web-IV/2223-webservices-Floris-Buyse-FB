@@ -5,7 +5,7 @@ const {
 module.exports = {
   env: "NODE_ENV",
   database: {
-    user: "DB_USER",
+    username: "DB_USER",
     password: "DB_PW"
   }
 }
