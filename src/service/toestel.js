@@ -6,61 +6,42 @@ let {
 
 const toestelRepo = require('../repository/toestel');
 
-const getAll = () => {
+const getAll = async () => {
+  const toestellen = await toestelRepo.getAll();
   return {
-    items: TOESTELLEN,
-    count: TOESTELLEN.length
-  };
+    items: toestellen,
+    count: await toestelRepo.getCount()
+  }
 };
 
 const getById = async (id) => {
   return await toestelRepo.getById(id);
 };
 
-const create = ({
+const create = async ({
   type,
-  locatieid
+  locatie_id
 }) => {
-
-  if (type !== "gewicht" && type !== "bodyweight")
-    throw new Error('Type kan enkel gewicht of bodyweight zijn');
-
-  if (!LOCATIES.find(l => l.id === locatieid))
-    throw new Error(`Er bestaat geen locatie met id ${locatieid}`);
-
-  const newToestel = {
-    id: Math.max(...TOESTELLEN.map(t => t.id)) + 1,
-    type: type,
-    locatieid: locatieid
-  };
-  TOESTELLEN = [...TOESTELLEN, newToestel];
+  const newToestel = await toestelRepo.create({
+    type,
+    locatie_id
+  });
   return newToestel;
 };
 
-const updateById = (id, {
+const updateById = async (id, {
   type,
-  locatieid
+  locatie_id
 }) => {
-
-  if (type !== "gewicht" && type !== "bodyweight")
-    throw new Error('Type kan enkel gewicht of bodyweight zijn');
-
-  if (!LOCATIES.find(l => l.id === locatieid))
-    throw new Error(`Er bestaat geen locatie met id ${locatieid}`);
-
-  let toestel;
-  if (id)
-    toestel = TOESTELLEN.find(t => t.id === parseInt(id));
-  if (!toestel)
-    throw new Error(`Toestel met id ${id} bestaat niet`);
-
-  toestel.type = type;
-  toestel.locatieid = locatieid;
-  return toestel;
+  const updatedToestel = await toestelRepo.updateById(id, {
+    type,
+    locatie_id
+  });
+  return updatedToestel;
 };
 
-const deleteById = (id) => {
-  TOESTELLEN = TOESTELLEN.filter(t => t.id !== parseInt(id));
+const deleteById = async (id) => {
+  await toestelRepo.deleteById(id);
 };
 
 module.exports = {

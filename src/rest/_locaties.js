@@ -10,18 +10,18 @@ const getLocatiesById = async (ctx) => {
 };
 
 const createLocatie = async (ctx) => {
-  ctx.body = locatieService.create({
+  ctx.body = await locatieService.create({
     ...ctx.request.body
   });
 };
 
 const deleteLocatie = async (ctx) => {
-  locatieService.deleteById(ctx.params.id);
+  await locatieService.deleteById(ctx.params.id);
   ctx.status = 204;
 };
 
 const updateLocatie = async (ctx) => {
-  ctx.body = locatieService.updateById(ctx.params.id, {
+  ctx.body = await locatieService.updateById(ctx.params.id, {
     ...ctx.request.body
   });
 };

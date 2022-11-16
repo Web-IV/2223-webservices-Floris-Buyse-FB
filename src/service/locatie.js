@@ -1,3 +1,6 @@
+const {
+  transport
+} = require('winston');
 let {
   LOCATIES,
   TOESTELLEN,
@@ -9,51 +12,46 @@ const getAll = async () => {
   const locaties = await locatieRepo.getAll();
   return {
     items: locaties,
-    count: locaties.lenght
+    count: await locatieRepo.getCount()
   }
 };
 
 const getById = async (id) => {
-  return Promise.resolve(LOCATIES.find(l => l.id === parseInt(id)));
+  return await locatieRepo.getById(id);
 };
 
-const create = ({
+const create = async ({
   stad,
   postcode,
   straat,
   nummer
 }) => {
-  const newLocation = {
-    id: Math.max(...LOCATIES.map(l => l.id)) + 1,
-    stad: stad,
-    postcode: postcode,
-    straat: straat,
-    nummer: nummer
-  };
-  LOCATIES = [...LOCATIES, newLocation];
-  return newLocation;
+  const newLocatie = await locatieRepo.create({
+    stad,
+    postcode,
+    straat,
+    nummer
+  });
+  return newLocatie;
 };
 
-const updateById = (id, {
+const updateById = async (id, {
   stad,
   postcode,
   straat,
   nummer
 }) => {
-  let locatie;
-  if (id)
-    locatie = LOCATIES.find(l => l.id === parseInt(id));
-  if (!locatie)
-    throw new Error(`Locatie met id ${id} bestaat niet`);
-  locatie.stad = stad;
-  locatie.postcode = postcode;
-  locatie.straat = straat;
-  locatie.nummer = nummer;
-  return locatie;
+  const updatedLocatie = await locatieRepo.updateById(id, {
+    stad,
+    postcode,
+    straat,
+    nummer
+  });
+  return updatedLocatie;
 };
 
-const deleteById = (id) => {
-  LOCATIES = LOCATIES.filter(l => l.id !== parseInt(id));
+const deleteById = async (id) => {
+  await locatieRepo.deleteById(id);
 };
 
 module.exports = {

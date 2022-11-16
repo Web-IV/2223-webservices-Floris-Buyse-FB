@@ -7,41 +7,39 @@ const {
 } = require('../core/logging');
 
 const getAll = async () => {
-  const locaties = await getKnex()(tables.locatie)
+  const oefeningen = await getKnex()(tables.oefening)
     .select('*')
-    .orderBy('straat', 'asc');
-  return locaties
+    .orderBy('spiergroep', 'asc');
+  return oefeningen
 }
 
 const getCount = async () => {
-  const [count] = await getKnex()(tables.locatie).count();
+  const [count] = await getKnex()(tables.oefening).count();
   return count['COUNT(*)'];
 }
 
 const SELECT_COLUMNS = [
-  `${tables.locatie}.id`, 'stad', 'postcode', 'straat', 'nummer'
-]
+  `${tables.oefening}.id`, 'spiergroep', 'moeilijkheidsgraad', 'toestel_id'
+];
 
 const getById = async (id) => {
-  const locaties = await getKnex()(tables.locatie)
+  const oefeningen = await getKnex()(tables.oefening)
     .first(SELECT_COLUMNS)
-    .where(`${tables.locatie}.id`, id);
-  return locaties
+    .where(`${tables.oefening}.id`, id);
+  return oefeningen
 }
 
 const create = async ({
-  stad,
-  postcode,
-  straat,
-  nummer
+  spiergroep,
+  moeilijkheidsgraad,
+  toestel_id
 }) => {
   try {
-    const [id] = await getKnex()(tables.locatie)
+    const [id] = await getKnex()(tables.oefening)
       .insert({
-        stad,
-        postcode,
-        straat,
-        nummer
+        spiergroep,
+        moeilijkheidsgraad,
+        toestel_id
       })
     return await getById(id);
   } catch (error) {
@@ -54,20 +52,18 @@ const create = async ({
 }
 
 const updateById = async (id, {
-  stad,
-  postcode,
-  straat,
-  nummer
+  spiergroep,
+  moeilijkheidsgraad,
+  toestel_id
 }) => {
   try {
-    await getKnex()(tables.locatie)
+    await getKnex()(tables.oefening)
       .update({
-        stad,
-        postcode,
-        straat,
-        nummer
+        spiergroep,
+        moeilijkheidsgraad,
+        toestel_id
       })
-      .where(`${tables.locatie}.id`, id);
+      .where(`${tables.oefening}.id`, id);
     return await getById(id);
   } catch (error) {
     const logger = getLogger();
@@ -80,10 +76,10 @@ const updateById = async (id, {
 
 const deleteById = async (id) => {
   try {
-    const deletedLocatie = await getKnex()(tables.locatie)
+    const deletedOefening = await getKnex()(tables.oefening)
       .delete()
-      .where(`${tables.locatie}.id`, id);
-    return deletedLocatie > 0;
+      .where(`${tables.oefening}.id`, id);
+    return deletedOefening > 0;
   } catch (error) {
     const logger = getLogger();
     logger.error('delete failed', {

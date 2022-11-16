@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const toestelService = require('../service/toestel');
 
 const getToestellen = async (ctx) => {
-  ctx.body = toestelService.getAll();
+  ctx.body = await toestelService.getAll();
 };
 
 const getToestellenById = async (ctx) => {
@@ -10,18 +10,18 @@ const getToestellenById = async (ctx) => {
 };
 
 const createToestel = async (ctx) => {
-  ctx.body = toestelService.create({
+  ctx.body = await toestelService.create({
     ...ctx.request.body
   });
 };
 
 const deleteToestel = async (ctx) => {
-  toestelService.deleteById(ctx.params.id);
+  await toestelService.deleteById(ctx.params.id);
   ctx.status = 204;
 };
 
 const updateToestel = async (ctx) => {
-  ctx.body = toestelService.updateById(ctx.params.id, {
+  ctx.body = await toestelService.updateById(ctx.params.id, {
     ...ctx.request.body
   });
 };

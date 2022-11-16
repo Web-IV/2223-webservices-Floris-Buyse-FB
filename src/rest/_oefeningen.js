@@ -2,26 +2,26 @@ const Router = require('@koa/router');
 const oefeningService = require('../service/oefening');
 
 const getOefeningen = async (ctx) => {
-  ctx.body = oefeningService.getAll();
+  ctx.body = await oefeningService.getAll();
 };
 
 const getOefeningenById = async (ctx) => {
-  ctx.body = oefeningService.getById(ctx.params.id);
+  ctx.body = await oefeningService.getById(ctx.params.id);
 };
 
 const createOefening = async (ctx) => {
-  ctx.body = oefeningService.create({
+  ctx.body = await oefeningService.create({
     ...ctx.request.body
   });
 };
 
 const deleteOefening = async (ctx) => {
-  oefeningService.deleteById(ctx.params.id);
+  await oefeningService.deleteById(ctx.params.id);
   ctx.status = 204;
 };
 
 const updateOefening = async (ctx) => {
-  ctx.body = oefeningService.updateById(ctx.params.id, {
+  ctx.body = await oefeningService.updateById(ctx.params.id, {
     ...ctx.request.body
   });
 };
