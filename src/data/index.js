@@ -3,6 +3,9 @@ const config = require('config');
 const {
   getLogger
 } = require('../core/logging');
+const {
+  join
+} = require('path');
 
 const DB_DB = config.get('database.database');
 const DB_HOST = config.get('database.host');
@@ -24,17 +27,60 @@ const initializeDatabase = async () => {
       port: DB_PORT,
       user: DB_USER,
       password: DB_PW,
-      database: DB_DB
-    }
+    },
+    migrations: {
+      tableName: 'knex_meta',
+      directory: join('src', 'data', 'migrations')
+    },
+    seeds: {
+      directory: join('src', 'data', 'seeds')
+    },
   }
   knexInstance = knex(knexOptions);
   try {
+    await knexInstance.raw('SELECT 1+1 AS result');
+    await knexInstance.raw(`CREATE DATABASE IF NOT EXISTS ${DB_DB}`);
+    //connectie verwijderen en nieuwe connectie aanmaken
+    await knexInstance.destroy();
+    knexOptions.connection.database = DB_DB;
+    knexInstance = knex(knexOptions);
     await knexInstance.raw('SELECT 1+1 AS result');
   } catch (error) {
     getLogger().error('Error init db', {
       error
     });
     throw new Error('init db failed');
+  }
+
+  let knexMigrationFailed = true
+  try {
+    await knexInstance.migrate.latest();
+    knexMigrationFailed = false;
+  } catch (error) {
+    getLogger().error('Error while migrating the database', {
+      error,
+    });
+  }
+
+  if (knexMigrationFailed) {
+    try {
+      await knexInstance.migrate.down();
+    } catch (error) {
+      getLogger().error('Error while migrating the database', {
+        error
+      });
+    }
+    throw new Error("Migration failed");
+  }
+
+  if (isDevelpment) {
+    try {
+      await knexInstance.seed.run();
+    } catch (error) {
+      getLogger().error('Seeding failed', {
+        error
+      })
+    };
   }
 }
 
