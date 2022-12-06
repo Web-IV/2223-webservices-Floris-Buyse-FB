@@ -7,6 +7,7 @@ let {
   OEFENINGEN
 } = require('../data/mock-data');
 const locatieRepo = require('../repository/locatie');
+const ServiceError = require('../core/serviceError');
 
 const getAll = async () => {
   const locaties = await locatieRepo.getAll();
@@ -17,7 +18,15 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  return await locatieRepo.getById(id);
+  const locatie = await locatieRepo.getById(id);
+
+  if (!locatie) {
+    throw ServiceError.notFound(`There is no location with id ${id}`, {
+      id
+    });
+  }
+
+  return locatie
 };
 
 const create = async ({

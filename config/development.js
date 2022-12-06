@@ -4,9 +4,9 @@ module.exports = {
     disabled: false
   },
   database: {
-    host: '127.0.0.1',
-    port: 3306,
-    database: 'openluchtfitness',
+    host: 'vichogent.be',
+    port: 40043,
+    database: '080000fb',
     client: 'mysql2'
   }
 }

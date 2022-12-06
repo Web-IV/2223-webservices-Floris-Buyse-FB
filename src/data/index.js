@@ -84,6 +84,17 @@ const initializeDatabase = async () => {
   }
 }
 
+async function shutdownData() {
+  const logger = getLogger();
+
+  logger.info('Shutting down database connection');
+
+  await knexInstance.destroy()
+  knexInstance = null;
+
+  logger.info('Database connection closed');
+}
+
 const getKnex = () => {
   if (!knexInstance) {
     throw new Error('connection not initialized');
@@ -100,5 +111,6 @@ const tables = Object.freeze({
 module.exports = {
   initializeDatabase,
   getKnex,
+  shutdownData,
   tables
 }
