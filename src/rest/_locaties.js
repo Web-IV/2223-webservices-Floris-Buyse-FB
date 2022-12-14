@@ -13,7 +13,7 @@ const getLocatiesById = async (ctx) => {
 
 getLocatiesById.validationScheme = {
   params: Joi.object({
-    id: Joi.number().integer().positive()
+    id: Joi.number().invalid(0).integer().positive()
   })
 }
 
@@ -39,7 +39,7 @@ const deleteLocatie = async (ctx) => {
 
 deleteLocatie.validationScheme = {
   params: Joi.object({
-    id: Joi.number().integer().positive()
+    id: Joi.number().invalid(0).integer().positive()
   })
 }
 
@@ -57,7 +57,7 @@ updateLocatie.validationScheme = {
     nummer: Joi.number().invalid(0).integer().positive()
   },
   params: Joi.object({
-    id: Joi.number().integer().positive()
+    id: Joi.number().invalid(0).integer().positive()
   })
 }
 

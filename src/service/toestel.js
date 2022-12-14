@@ -1,10 +1,5 @@
-let {
-  LOCATIES,
-  TOESTELLEN,
-  OEFENINGEN
-} = require('../data/mock-data');
-
 const toestelRepo = require('../repository/toestel');
+const ServiceError = require('../core/serviceError');
 
 const getAll = async () => {
   const toestellen = await toestelRepo.getAll();
@@ -15,7 +10,13 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  return await toestelRepo.getById(id);
+  const toestel = await toestelRepo.getById(id);
+
+  if (!toestel) {
+    throw ServiceError.notFound(`There is no toestel with id ${id}`, {
+      id
+    });
+  }
 };
 
 const create = async ({

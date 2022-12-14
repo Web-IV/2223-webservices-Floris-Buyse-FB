@@ -1,9 +1,5 @@
-let {
-  LOCATIES,
-  TOESTELLEN,
-  OEFENINGEN
-} = require('../data/mock-data');
 const oefeningRepo = require('../repository/oefening');
+const ServiceError = require('../core/serviceError');
 
 const getAll = async () => {
   const oefeningen = await oefeningRepo.getAll();
@@ -14,7 +10,13 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  return await oefeningRepo.getById(id);
+  const oefening = await oefeningRepo.getById(id);
+
+  if (!oefening) {
+    throw ServiceError.notFound(`There is no oefening with id ${id}`, {
+      id
+    });
+  }
 };
 
 const create = async ({

@@ -1,11 +1,3 @@
-const {
-  transport
-} = require('winston');
-let {
-  LOCATIES,
-  TOESTELLEN,
-  OEFENINGEN
-} = require('../data/mock-data');
 const locatieRepo = require('../repository/locatie');
 const ServiceError = require('../core/serviceError');
 
