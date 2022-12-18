@@ -8,6 +8,7 @@ module.exports = {
     password: "DB_PW",
     name: "DB_NAME",
     database: "DB_DB",
+    client: "DB_CLIENT"
   },
   auth: {
     jwksUri: 'AUTH_JWKS_URI',
