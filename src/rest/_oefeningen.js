@@ -1,7 +1,5 @@
 const Router = require('@koa/router');
-const {
-  valid
-} = require('joi');
+const Joi = require('joi');
 const oefeningService = require('../service/oefening');
 const validate = require('./_validation');
 

@@ -1,18 +1,35 @@
 module.exports = function (config) {
   config.set({
-    frameworks: ['jasmine'],
+
+    basePath: '',
+    frameworks: ['jasmine', 'browserify'],
+    files: [
+      '__tests__/*.js'
+    ],
+    exclude: [],
     preprocessors: {
-      '*.js': 'coverage'
+      '__tests__/*.js': ['browserify']
     },
-    files: ['*.js, *.spec.js'],
-    plugins: ['karma-jasmine', 'karma-chrome-launcher', 'karma-coverage'],
-    reporters: ['dots', 'coverage'],
+    plugins: [
+      require('karma-browserify'),
+      require('karma-jasmine'),
+      require('karma-chrome-launcher'),
+      require('karma-spec-reporter'),
+      require('karma-jasmine-html-reporter')
+    ],
+
+    reporters: ['spec', 'kjhtml'],
+    port: 9876,
     colors: true,
-    singleRun: true,
-    browsers: ['ChromeHeadless'],
-    coverageReporter: {
-      type: 'html',
-      dir: 'coverage/'
-    }
-  });
-};
+
+    logLevel: config.LOG_DISABLE,
+    autoWatch: true,
+    browsers: ['Chrome'],
+    client: {
+      clearContext: false
+    },
+
+    singleRun: false,
+    concurrency: Infinity,
+  })
+}
