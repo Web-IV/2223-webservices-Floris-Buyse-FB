@@ -9,7 +9,7 @@ const {
 
 const DB_DB = config.get('database.database');
 const DB_HOST = config.get('database.host');
-const DB_USER = config.get('database.username');
+const DB_USER = config.get('database.user');
 const DB_PW = config.get('database.password');
 const DB_CLIENT = config.get('database.client');
 const DB_PORT = config.get('database.port');
