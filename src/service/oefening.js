@@ -17,6 +17,8 @@ const getById = async (id) => {
       id
     });
   }
+
+  return oefening
 };
 
 const create = async ({

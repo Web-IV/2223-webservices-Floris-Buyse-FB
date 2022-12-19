@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
-const Joi = require('joi');
 const oefeningService = require('../service/oefening');
+const Joi = require('joi');
 const validate = require('./_validation');
 
 const getOefeningen = async (ctx) => {

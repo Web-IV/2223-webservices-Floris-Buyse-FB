@@ -17,6 +17,8 @@ const getById = async (id) => {
       id
     });
   }
+
+  return toestel
 };
 
 const create = async ({
