@@ -15,9 +15,6 @@ const {
   serializeError
 } = require('serialize-error');
 const ServiceError = require('./core/serviceError');
-const {
-  checkJwtToken
-} = require('./core/auth');
 
 const NODE_ENV = config.get('env');
 const LOG_LEVEL = config.get('log.level');
@@ -35,17 +32,6 @@ module.exports = async function createServer() {
 
   await initializeDatabase();
   const app = new Koa();
-
-  app.use(checkJwtToken());
-  // test code
-  // app.use(async (ctx, next) => {
-  //   const logger = getLogger();
-  //   logger.debug(ctx.headers.authorization); // 👈 1
-  //   logger.debug(JSON.stringify(ctx.state.user)); // 👈 2
-  //   logger.debug(ctx.state.jwtOriginalError); // 👈 3
-  //   await next();
-  // });
-
 
   const logger = getLogger();
 

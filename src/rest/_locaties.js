@@ -21,6 +21,7 @@ const createLocatie = async (ctx) => {
   ctx.body = await locatieService.create({
     ...ctx.request.body
   });
+  ctx.status = 201;
 };
 
 createLocatie.validationScheme = {

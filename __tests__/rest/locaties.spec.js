@@ -1,9 +1,9 @@
-const createServer = require('../src/createServer');
+const createServer = require('../../src/createServer');
 const supertest = require('supertest');
 const {
   getKnex,
   tables
-} = require('../src/data');
+} = require('../../src/data/index');
 
 const data = {
   locaties: [{
@@ -28,60 +28,10 @@ const data = {
       nummer: 99
     }
   ],
-  toestellen: [{
-      id: 1,
-      type: 'bodyweight',
-      locatieid: 3
-    },
-    {
-      id: 2,
-      type: 'gewicht',
-      locatieid: 1
-    },
-    {
-      id: 3,
-      type: 'bodyweight',
-      locatieid: 2
-    },
-  ],
-
-  oefeningen: [{
-      id: 1,
-      spiergroep: 'triceps',
-      moeilijkheidsgraad: 'medium',
-      toestelid: 1
-    },
-    {
-      id: 2,
-      spiergroep: 'biceps',
-      moeilijkheidsgraad: 'medium',
-      toestelid: 2
-    },
-    {
-      id: 3,
-      spiergroep: 'abs',
-      moeilijkheidsgraad: 'hard',
-      toestelid: 3
-    },
-    {
-      id: 4,
-      spiergroep: 'quadriceps',
-      moeilijkheidsgraad: 'easy',
-      toestelid: 1
-    },
-    {
-      id: 5,
-      spiergroep: 'calves',
-      moeilijkheidsgraad: 'easy',
-      toestelid: 1
-    },
-  ]
 }
 
 const dataToDelete = {
   locaties: [1, 2, 3],
-  toestellen: [1, 2, 3],
-  oefeningen: [1, 2, 3, 4, 5]
 };
 
 describe('locaties', () => {
@@ -104,14 +54,10 @@ describe('locaties', () => {
   describe('GET /api/locaties', () => {
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
-      await knex(tables.toestel).insert(data.toestellen);
-      await knex(tables.oefening).insert(data.oefeningen);
     })
 
     afterAll(async () => {
-      await knex(tables.locatie).wherein('id', dataToDelete.locaties).delete();
-      await knex(tables.toestel).wherein('id', dataToDelete.toestellen).delete();
-      await knex(tables.oefening).wherein('id', dataToDelete.oefeningen).delete();
+      await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
     it('should return 200 and all locaties', async () => {
@@ -126,14 +72,10 @@ describe('locaties', () => {
   describe('GET /api/locaties/:id', () => {
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
-      await knex(tables.toestel).insert(data.toestellen);
-      await knex(tables.oefening).insert(data.oefeningen);
     })
 
     afterAll(async () => {
-      await knex(tables.locatie).wherein('id', dataToDelete.locaties).delete();
-      await knex(tables.toestel).wherein('id', dataToDelete.toestellen).delete();
-      await knex(tables.oefening).wherein('id', dataToDelete.oefeningen).delete();
+      await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
     it('should return 200 and the requested locatie', async () => {
@@ -153,16 +95,16 @@ describe('locaties', () => {
 
   //hier verder
   describe('POST /api/locaties', () => {
+
+    const locatieToDelete = [];
+
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
-      await knex(tables.toestel).insert(data.toestellen);
-      await knex(tables.oefening).insert(data.oefeningen);
     })
 
     afterAll(async () => {
-      await knex(tables.locatie).wherein('id', dataToDelete.locaties).delete();
-      await knex(tables.toestel).wherein('id', dataToDelete.toestellen).delete();
-      await knex(tables.oefening).wherein('id', dataToDelete.oefeningen).delete();
+      await knex(tables.locatie).whereIn('id', locatieToDelete).delete();
+      await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
     it('should return 201 and return the created locatie', async () => {
@@ -180,6 +122,8 @@ describe('locaties', () => {
       expect(response.body.postcode).toBe(9000);
       expect(response.body.straat).toBe('Kasteellaan');
       expect(response.body.nummer).toBe(59);
+
+      locatieToDelete.push(response.body.id)
     });
   });
 });
