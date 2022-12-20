@@ -6,7 +6,7 @@ module.exports = {
   },
   database: {
     host: 'localhost',
-    port: 3306,
+    port: 40043,
     database: 'openluchtfitness',
     client: 'mysql2',
   }
