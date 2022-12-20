@@ -4,9 +4,6 @@ const jwt = require('koa-jwt');
 const {
   getLogger
 } = require('./logging')
-const axios = require('axios');
-
-const AUTH_USER_INFO = config.get('auth.userInfo');
 
 function getJwtSecret() {
   try {
