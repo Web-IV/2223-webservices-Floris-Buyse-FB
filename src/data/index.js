@@ -109,8 +109,8 @@ const tables = Object.freeze({
 });
 
 module.exports = {
-  initializeDatabase,
+  tables,
   getKnex,
+  initializeDatabase,
   shutdownData,
-  tables
 }

@@ -28,13 +28,30 @@ const data = {
       nummer: 99
     }
   ],
+  toestellen: [{
+      id: 1,
+      type: 'bodyweight',
+      locatie_id: 3
+    },
+    {
+      id: 2,
+      type: 'gewicht',
+      locatie_id: 1
+    },
+    {
+      id: 3,
+      type: 'bodyweight',
+      locatie_id: 2
+    }
+  ],
 }
 
 const dataToDelete = {
   locaties: [1, 2, 3],
+  toestellen: [1, 2, 3]
 };
 
-describe('locaties', () => {
+describe('toestellen', () => {
   let server;
   let request;
   let knex;
@@ -48,19 +65,21 @@ describe('locaties', () => {
     await server.stop();
   });
 
-  const url = '/api/locaties'
+  const url = '/api/toestellen'
 
   //get all testen
-  describe('GET /api/locaties', () => {
+  describe('GET /api/toestellen', () => {
     beforeAll(async () => {
+      await knex(tables.toestel).insert(data.toestellen);
       await knex(tables.locatie).insert(data.locaties);
     })
 
     afterAll(async () => {
       await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
+      await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
     })
 
-    it('should return 200 and all locaties', async () => {
+    it('should return 200 and all toestellen', async () => {
       const response = await request.get(url);
       expect(response.status).toBe(200);
       expect(response.body.items.length).toBe(3);
@@ -69,98 +88,92 @@ describe('locaties', () => {
 
 
   // get by id testen
-  describe('GET /api/locaties/:id', () => {
+  describe('GET /api/toestellen/:id', () => {
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
+      await knex(tables.toestel).insert(data.toestellen);
     })
 
     afterAll(async () => {
+      await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
       await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
-    it('should return 200 and the requested locatie', async () => {
-      const locatieId = data.locaties[0].id
-      const response = await request.get(`${url}/${locatieId}`);
+    it('should return 200 and the requested toestel', async () => {
+      const toestelId = data.toestel[0].id
+      const response = await request.get(`${url}/${toestelId}`);
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        id: locatieId,
-        stad: 'Gent',
-        postcode: 9000,
-        straat: 'Rabotpark',
-        nummer: 15
+        id: toestelId,
+        type: 'bodyweight',
+        locatie_id: 3,
       });
     });
   });
 
   // post testen
-  describe('POST /api/locaties', () => {
+  describe('POST /api/toestellen', () => {
 
-    const locatieToDelete = [];
+    const toestelToDelete = [];
 
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
+      await knex(tables.toestel).insert(data.toestellen);
     })
 
     afterAll(async () => {
-      await knex(tables.locatie).whereIn('id', locatieToDelete).delete();
+      await knex(tables.locatie).whereIn('id', toestelToDelete).delete();
+      await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
       await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
-    it('should return 201 and return the created locatie', async () => {
+    it('should return 201 and return the created toestel', async () => {
       const response = await request.post(url)
         .send({
-          stad: 'Gent',
-          postcode: 9000,
-          straat: 'Kasteellaan',
-          nummer: 59
+          type: 'gewicht',
+          locatie_id: 2
         })
 
       expect(response.status).toBe(201);
       expect(response.body.id).toBeTruthy();
-      expect(response.body.stad).toBe('Gent');
-      expect(response.body.postcode).toBe(9000);
-      expect(response.body.straat).toBe('Kasteellaan');
-      expect(response.body.nummer).toBe(59);
+      expect(response.body.type).toBe('gewicht');
+      expect(response.body.locatie_id).toBe(2);
 
-      locatieToDelete.push(response.body.id)
+      toestelToDelete.push(response.body.id)
     });
   });
 
   // put testen
-  describe('PUT /api/locaties/:id', () => {
+  describe('PUT /api/toestellen/:id', () => {
 
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
-      await knex(tables.locatie).insert([{
+      await knex(tables.toestel).insert(data.toestellen);
+      await knex(tables.toestel).insert([{
         id: 4,
-        stad: 'Gent',
-        postcode: 9000,
-        straat: 'Kasteellaan',
-        nummer: 59
+        type: 'bodyweight',
+        locatie_id: 2
       }]);
     })
 
     afterAll(async () => {
-      await knex(tables.locatie).where('id', 4).delete();
+      await knex(tables.toestel).where('id', 4).delete();
+      await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
       await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
-    it('should return 200 and return the updated locatie', async () => {
+    it('should return 200 and return the updated toestel', async () => {
       const response = await request.put(`${url}/4`)
         .send({
-          stad: 'Gent',
-          postcode: 9000,
-          straat: 'Veldstraat',
-          nummer: 17
+          type: 'bodyweight',
+          locatie_id: 2,
         })
 
       expect(response.status).toBe(200);
       expect(response.body.id).toBeTruthy();
-      expect(response.body.stad).toBe('Gent');
-      expect(response.body.postcode).toBe(9000);
-      expect(response.body.straat).toBe('Veldstraat');
-      expect(response.body.nummer).toBe(17);
+      expect(response.body.type).toBe('bodyweight');
+      expect(response.body.locatie_id).toBe(2);
     });
 
   });
@@ -170,16 +183,16 @@ describe('locaties', () => {
 
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
-      await knex(tables.locatie).insert([{
+      await knex(tables.toestel).insert(data.toestellen);
+      await knex(tables.toestel).insert([{
         id: 4,
-        stad: 'Gent',
-        postcode: 9000,
-        straat: 'Kasteellaan',
-        nummer: 59
+        type: 'bodyweight',
+        locatie_id: 2
       }]);
     })
 
     afterAll(async () => {
+      await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
       await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
