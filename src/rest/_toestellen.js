@@ -2,6 +2,10 @@ const Router = require('@koa/router');
 const toestelService = require('../service/toestel');
 const Joi = require('joi');
 const validate = require('./_validation');
+const {
+  hasPermission,
+  permissions
+} = require('../core/auth');
 
 const getToestellen = async (ctx) => {
   ctx.body = await toestelService.getAll();

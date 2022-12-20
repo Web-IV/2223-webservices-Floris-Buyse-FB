@@ -4,7 +4,7 @@ const Joi = require('joi');
 const validate = require('./_validation');
 const {
   hasPermission,
-  permissions
+  permissions,
 } = require('../core/auth');
 
 const getLocaties = async (ctx) => {

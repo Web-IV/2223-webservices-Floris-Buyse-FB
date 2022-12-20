@@ -41,31 +41,6 @@ function checkJwtToken() {
   }
 }
 
-async function addUserInfo(ctx) {
-  const logger = getLogger();
-  try {
-    const token = ctx.headers.authorization;
-    const url = AUTH_USER_INFO;
-    if (token && url && ctx.state.user) {
-      logger.debug(`addUserInfo: ${url}, ${JSON.stringify(token)}`);
-
-      const userInfo = await axios.get(url, {
-        headers: {
-          Authorization: token,
-        },
-      });
-
-      ctx.state.user = {
-        ...ctx.state.user,
-        ...userInfo.data,
-      };
-    }
-  } catch (error) {
-    logger.error(error);
-    throw error;
-  }
-}
-
 const permissions = Object.freeze({
   loggedIn: 'loggedIn',
   read: 'read',
