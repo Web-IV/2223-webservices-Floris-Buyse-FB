@@ -2,10 +2,21 @@ const Router = require('@koa/router');
 const locatieService = require('../service/locatie');
 const Joi = require('joi');
 const validate = require('./_validation');
+const {
+  hasPermission,
+  permissions
+} = require('../core/auth');
 
 const getLocaties = async (ctx) => {
   ctx.body = await locatieService.getAll();
 };
+
+getLocaties.validationScheme = {
+  query: Joi.object({
+    limit: Joi.number().positive().max(1000).optional(),
+    offset: Joi.number().min(0).optional(),
+  }).and('limit', 'offset'),
+}
 
 const getLocatiesById = async (ctx) => {
   ctx.body = await locatieService.getById(ctx.params.id);
@@ -68,11 +79,11 @@ module.exports = (app) => {
     prefix: '/locaties'
   });
 
-  router.get('/', getLocaties);
-  router.get('/:id', validate(getLocatiesById.validationScheme), getLocatiesById);
-  router.post('/', validate(createLocatie.validationScheme), createLocatie);
-  router.put('/:id', validate(updateLocatie.validationScheme), updateLocatie);
-  router.delete('/:id', validate(deleteLocatie.validationScheme), deleteLocatie);
+  router.get('/', hasPermission(permissions.read), validate(getLocaties.validationScheme), getLocaties);
+  router.get('/:id', hasPermission(permissions.read), validate(getLocatiesById.validationScheme), getLocatiesById);
+  router.post('/', hasPermission(permissions.write), validate(createLocatie.validationScheme), createLocatie);
+  router.put('/:id', hasPermission(permissions.write), validate(updateLocatie.validationScheme), updateLocatie);
+  router.delete('/:id', hasPermission(permissions.write), validate(deleteLocatie.validationScheme), deleteLocatie);
 
   app
     .use(router.routes())

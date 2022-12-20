@@ -7,6 +7,13 @@ const getToestellen = async (ctx) => {
   ctx.body = await toestelService.getAll();
 };
 
+getToestellen.validationScheme = {
+  query: Joi.object({
+    limit: Joi.number().positive().max(1000).optional(),
+    offset: Joi.number().min(0).optional(),
+  }).and('limit', 'offset'),
+}
+
 const getToestellenById = async (ctx) => {
   ctx.body = await toestelService.getById(ctx.params.id);
 };
@@ -64,11 +71,11 @@ module.exports = (app) => {
     prefix: '/toestellen'
   });
 
-  router.get('/', getToestellen);
-  router.get('/:id', validate(getToestellenById.validationScheme), getToestellenById);
-  router.post('/', validate(createToestel.validationScheme), createToestel);
-  router.put('/:id', validate(updateToestel.validationScheme), updateToestel);
-  router.delete('/:id', validate(deleteToestel.validationScheme), deleteToestel);
+  router.get('/', hasPermission(permissions.read), validate(getToestellen.validationScheme), getToestellen);
+  router.get('/:id', hasPermission(permissions.read), validate(getToestellenById.validationScheme), getToestellenById);
+  router.post('/', hasPermission(permissions.write), validate(createToestel.validationScheme), createToestel);
+  router.put('/:id', hasPermission(permissions.write), validate(updateToestel.validationScheme), updateToestel);
+  router.delete('/:id', hasPermission(permissions.write), validate(deleteToestel.validationScheme), deleteToestel);
 
   app
     .use(router.routes())

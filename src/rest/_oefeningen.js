@@ -2,10 +2,21 @@ const Router = require('@koa/router');
 const oefeningService = require('../service/oefening');
 const Joi = require('joi');
 const validate = require('./_validation');
+const {
+  hasPermission,
+  permissions
+} = require('../core/auth');
 
 const getOefeningen = async (ctx) => {
   ctx.body = await oefeningService.getAll();
 };
+
+getOefeningen.validationScheme = {
+  query: Joi.object({
+    limit: Joi.number().positive().max(1000).optional(),
+    offset: Joi.number().min(0).optional(),
+  }).and('limit', 'offset'),
+}
 
 const getOefeningenById = async (ctx) => {
   ctx.body = await oefeningService.getById(ctx.params.id);
@@ -64,11 +75,11 @@ module.exports = (app) => {
     prefix: '/oefeningen'
   });
 
-  router.get('/', getOefeningen);
-  router.get('/:id', validate(getOefeningenById.validationScheme), getOefeningenById);
-  router.post('/', validate(createOefening.validationScheme), createOefening);
-  router.put('/:id', validate(updateOefening.validationScheme), updateOefening);
-  router.delete('/:id', validate(updateOefening.validationScheme), updateOefening);
+  router.get('/', hasPermission(permissions.read), validate(getOefeningen.validationScheme), getOefeningen);
+  router.get('/:id', hasPermission(permissions.read), validate(getOefeningenById.validationScheme), getOefeningenById);
+  router.post('/', hasPermission(permissions.write), validate(createOefening.validationScheme), createOefening);
+  router.put('/:id', hasPermission(permissions.write), validate(updateOefening.validationScheme), updateOefening);
+  router.delete('/:id', hasPermission(permissions.write), validate(updateOefening.validationScheme), updateOefening);
 
   app
     .use(router.routes())
