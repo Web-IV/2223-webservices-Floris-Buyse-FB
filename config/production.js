@@ -8,6 +8,6 @@ module.exports = {
     host: 'localhost',
     port: 3306,
     database: 'openluchtfitness',
-    client: 'mysql2'
+    client: 'mysql2',
   }
 }
