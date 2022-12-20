@@ -1,33 +1,11 @@
-const createServer = require('../../src/createServer');
-const supertest = require('supertest');
 const {
-  getKnex,
   tables
 } = require('../../src/data/index');
+const {
+  withServer
+} = require('../helpers');
 
 const data = {
-  locaties: [{
-      id: 1,
-      stad: 'Gent',
-      postcode: 9000,
-      straat: 'Rabotpark',
-      nummer: 15
-    },
-    {
-      id: 2,
-      stad: 'Gent',
-      postcode: 9000,
-      straat: 'Groene Valei park',
-      nummer: 1
-    },
-    {
-      id: 3,
-      stad: 'Gent',
-      postcode: 9000,
-      straat: 'Blaarmeersen',
-      nummer: 99
-    }
-  ],
   toestellen: [{
       id: 1,
       type: 'bodyweight',
@@ -52,17 +30,15 @@ const dataToDelete = {
 };
 
 describe('toestellen', () => {
-  let server;
   let request;
   let knex;
-  beforeAll(async () => {
-    server = await createServer();
-    request = supertest(server.getApp().callback());
-    knex = getKnex();
-  });
 
-  afterAll(async () => {
-    await server.stop();
+  withServer(({
+    knex: k,
+    request: r,
+  }) => {
+    knex = k;
+    request = r;
   });
 
   const url = '/api/toestellen'
@@ -71,11 +47,9 @@ describe('toestellen', () => {
   describe('GET /api/toestellen', () => {
     beforeAll(async () => {
       await knex(tables.toestel).insert(data.toestellen);
-      await knex(tables.locatie).insert(data.locaties);
     })
 
     afterAll(async () => {
-      await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
       await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
     })
 
@@ -90,17 +64,15 @@ describe('toestellen', () => {
   // get by id testen
   describe('GET /api/toestellen/:id', () => {
     beforeAll(async () => {
-      await knex(tables.locatie).insert(data.locaties);
       await knex(tables.toestel).insert(data.toestellen);
     })
 
     afterAll(async () => {
       await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
-      await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
     it('should return 200 and the requested toestel', async () => {
-      const toestelId = data.toestel[0].id
+      const toestelId = data.toestellen[0].id
       const response = await request.get(`${url}/${toestelId}`);
 
       expect(response.status).toBe(200);
@@ -118,14 +90,12 @@ describe('toestellen', () => {
     const toestelToDelete = [];
 
     beforeAll(async () => {
-      await knex(tables.locatie).insert(data.locaties);
       await knex(tables.toestel).insert(data.toestellen);
     })
 
     afterAll(async () => {
       await knex(tables.locatie).whereIn('id', toestelToDelete).delete();
       await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
-      await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
     it('should return 201 and return the created toestel', async () => {
@@ -148,7 +118,6 @@ describe('toestellen', () => {
   describe('PUT /api/toestellen/:id', () => {
 
     beforeAll(async () => {
-      await knex(tables.locatie).insert(data.locaties);
       await knex(tables.toestel).insert(data.toestellen);
       await knex(tables.toestel).insert([{
         id: 4,
@@ -160,7 +129,6 @@ describe('toestellen', () => {
     afterAll(async () => {
       await knex(tables.toestel).where('id', 4).delete();
       await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
-      await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
     it('should return 200 and return the updated toestel', async () => {
@@ -182,7 +150,6 @@ describe('toestellen', () => {
   describe('DELETE /api/locaties/:id', () => {
 
     beforeAll(async () => {
-      await knex(tables.locatie).insert(data.locaties);
       await knex(tables.toestel).insert(data.toestellen);
       await knex(tables.toestel).insert([{
         id: 4,
@@ -193,7 +160,6 @@ describe('toestellen', () => {
 
     afterAll(async () => {
       await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
-      await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
     it('should return 204 and return nothing', async () => {
