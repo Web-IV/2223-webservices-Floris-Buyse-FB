@@ -3,7 +3,7 @@ const config = require('config');
 const jwt = require('koa-jwt');
 const {
   getLogger
-} = require('./logging')
+} = require('./logging');
 
 function getJwtSecret() {
   try {
@@ -66,5 +66,5 @@ function hasPermission(permission) {
 module.exports = {
   checkJwtToken,
   hasPermission,
-  permissions
+  permissions,
 };

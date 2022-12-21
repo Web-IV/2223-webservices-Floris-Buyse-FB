@@ -37,13 +37,16 @@ const dataToDelete = {
 describe('locaties', () => {
   let request;
   let knex;
+  let authHeader;
 
   withServer(({
     knex: k,
     request: r,
+    authHeader: a
   }) => {
     knex = k;
     request = r;
+    authHeader = a;
   });
 
   const url = '/api/locaties'
@@ -59,7 +62,7 @@ describe('locaties', () => {
     })
 
     it('should return 200 and all locaties', async () => {
-      const response = await request.get(url);
+      const response = await request.get(url).set('Authorization', authHeader);
       expect(response.status).toBe(200);
       expect(response.body.items.length).toBe(3);
     });
@@ -78,7 +81,8 @@ describe('locaties', () => {
 
     it('should return 200 and the requested locatie', async () => {
       const locatieId = data.locaties[0].id
-      const response = await request.get(`${url}/${locatieId}`);
+      const response = await request.get(`${url}/${locatieId}`)
+        .set('Authorization', authHeader);
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -113,6 +117,7 @@ describe('locaties', () => {
           straat: 'Kasteellaan',
           nummer: 59
         })
+        .set('Authorization', authHeader);
 
       expect(response.status).toBe(201);
       expect(response.body.id).toBeTruthy();
@@ -152,6 +157,7 @@ describe('locaties', () => {
           straat: 'Veldstraat',
           nummer: 17
         })
+        .set('Authorization', authHeader);
 
       expect(response.status).toBe(200);
       expect(response.body.id).toBeTruthy();
@@ -183,6 +189,7 @@ describe('locaties', () => {
 
     it('should return 204 and return nothing', async () => {
       const response = await request.delete(`${url}/4`)
+        .set('Authorization', authHeader);
 
       expect(response.status).toBe(204);
       expect(response.body).toEqual({});

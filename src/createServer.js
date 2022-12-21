@@ -16,7 +16,7 @@ const {
 } = require('serialize-error');
 const ServiceError = require('./core/serviceError');
 const {
-  checkJwtToken
+  checkJwtToken,
 } = require('./core/auth');
 
 const NODE_ENV = config.get('env');
