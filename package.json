@@ -41,6 +41,6 @@
     "start:prod": "node src/index.js",
     "test": "npx env-cmd -f .env.test jest",
     "test:coverage": "npx env-cmd -f .env.test jest --coverage",
-    "docs": "apidoc -i ./ -e node_modules -o ./docs"
+    "docs": "apidoc -f .js -i ./ -e node_modules -o ./docs"
   }
 }
