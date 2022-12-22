@@ -7,6 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "@koa/router": "^12.0.0",
+    "apidoc": "^0.53.1",
     "axios": "^1.2.1",
     "config": "^3.3.8",
     "env-cmd": "^10.1.0",
@@ -39,6 +40,7 @@
     "start": "npx env-cmd nodemon src/index.js",
     "start:prod": "node src/index.js",
     "test": "npx env-cmd -f .env.test jest",
-    "test:coverage": "npx env-cmd -f .env.test jest --coverage"
+    "test:coverage": "npx env-cmd -f .env.test jest --coverage",
+    "docs": "apidoc -i ./ -e node_modules -o ./docs"
   }
 }

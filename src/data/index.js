@@ -60,6 +60,7 @@ const initializeDatabase = async () => {
     getLogger().error('Error while migrating the database', {
       error,
     });
+    throw error;
   }
 
   if (knexMigrationFailed) {

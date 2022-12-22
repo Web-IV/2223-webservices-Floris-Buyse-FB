@@ -1,7 +1,5 @@
 # Examenopdracht Web Services
 
-> Schrap hierboven wat niet past
-
 - Student: FLORIS BUYSE
 - Studentennummer: 202080000
 - E-mailadres: floris.buyse@student.hogent.be
@@ -13,9 +11,6 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 - [NodeJS](https://nodejs.org)
 - [Yarn](https://yarnpkg.com)
 - [MySQL Community Server](https://dev.mysql.com/downloads/mysql/)
-- ...
-
-> Vul eventueel aan
 
 ## Opstarten
 

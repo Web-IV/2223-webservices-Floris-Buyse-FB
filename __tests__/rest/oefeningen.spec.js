@@ -1,9 +1,9 @@
 const {
-  tables
-} = require('../../src/data/index');
-const {
   withServer
 } = require('../helpers');
+const {
+  tables
+} = require('../../src/data/index');
 
 const data = {
   locaties: [{
@@ -83,7 +83,7 @@ const dataToDelete = {
   oefeningen: [1, 2, 3, 4, 5]
 };
 
-describe('toestellen', () => {
+describe('oefeningen', () => {
   let request;
   let knex;
   let authHeader;
@@ -91,146 +91,165 @@ describe('toestellen', () => {
   withServer(({
     knex: k,
     request: r,
-    authHeader: a,
+    authHeader: a
   }) => {
     knex = k;
     request = r;
     authHeader = a;
   });
 
-  const url = '/api/toestellen'
+  const url = '/api/oefeningen'
 
   //get all testen
-  describe('GET /api/toestellen', () => {
+  describe('GET /api/oefeningen', () => {
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
       await knex(tables.toestel).insert(data.toestellen);
+      await knex(tables.oefening).insert(data.oefeningen);
     })
 
     afterAll(async () => {
+      await knex(tables.oefening).whereIn('id', dataToDelete.oefeningen).delete();
       await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
       await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
-    it('should return 200 and all toestellen', async () => {
+    it('should return 200 and all oefeningen', async () => {
       const response = await request.get(url).set('Authorization', authHeader);
       expect(response.status).toBe(200);
-      expect(response.body.items.length).toBe(3);
+      expect(response.body.items.length).toBe(5);
     });
   });
 
 
   // get by id testen
-  describe('GET /api/toestellen/:id', () => {
+  describe('GET /api/oefeningen/:id', () => {
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
       await knex(tables.toestel).insert(data.toestellen);
+      await knex(tables.oefening).insert(data.oefeningen);
     })
 
     afterAll(async () => {
+      await knex(tables.oefening).whereIn('id', dataToDelete.oefeningen).delete();
       await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
       await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
-    it('should return 200 and the requested toestel', async () => {
-      const toestelId = data.toestellen[0].id
-      const response = await request.get(`${url}/${toestelId}`).set('Authorization', authHeader);
+    it('should return 200 and the requested oefening', async () => {
+      const oefeningId = data.oefeningen[0].id
+      const response = await request.get(`${url}/${oefeningId}`).set('Authorization', authHeader);
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        id: toestelId,
-        type: 'bodyweight',
-        locatie_id: 3,
+        id: oefeningId,
+        spiergroep: 'triceps',
+        moeilijkheidsgraad: 'medium',
+        toestel_id: 1,
       });
     });
   });
 
   // post testen
-  describe('POST /api/toestellen', () => {
+  describe('POST /api/oefeningen', () => {
 
-    const toestelToDelete = [];
+    const oefeningToDelete = [];
 
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
       await knex(tables.toestel).insert(data.toestellen);
+      await knex(tables.oefening).insert(data.oefeningen);
     })
 
     afterAll(async () => {
-      await knex(tables.locatie).whereIn('id', toestelToDelete).delete();
+      await knex(tables.oefening).whereIn('id', oefeningToDelete).delete();
+      await knex(tables.oefening).whereIn('id', dataToDelete.oefeningen).delete();
       await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
       await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
-    it('should return 201 and return the created toestel', async () => {
+    it('should return 201 and return the created oefening', async () => {
       const response = await request.post(url)
         .send({
-          type: 'gewicht',
-          locatie_id: 2
-        }).set('Authorization', authHeader)
+          id: 6,
+          spiergroep: 'calves',
+          moeilijkheidsgraad: 'medium',
+          toestel_id: 2,
+        }).set('Authorization', authHeader);
 
       expect(response.status).toBe(201);
       expect(response.body.id).toBeTruthy();
-      expect(response.body.type).toBe('gewicht');
-      expect(response.body.locatie_id).toBe(2);
+      expect(response.body.spiergroep).toBe('calves');
+      expect(response.body.moeilijkheidsgraad).toBe('medium');
+      expect(response.body.toestel_id).toBe(2);
 
-      toestelToDelete.push(response.body.id)
+      oefeningToDelete.push(response.body.id)
     });
   });
 
   // put testen
-  describe('PUT /api/toestellen/:id', () => {
+  describe('PUT /api/oefeningen/:id', () => {
 
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
       await knex(tables.toestel).insert(data.toestellen);
-      await knex(tables.toestel).insert([{
-        id: 4,
-        type: 'bodyweight',
-        locatie_id: 2
+      await knex(tables.oefening).insert(data.oefeningen);
+      await knex(tables.oefening).insert([{
+        id: 6,
+        spiergroep: 'calves',
+        moeilijkheidsgraad: 'medium',
+        toestel_id: 2,
       }]);
     })
 
     afterAll(async () => {
-      await knex(tables.toestel).where('id', 4).delete();
+      await knex(tables.oefening).where('id', 4).delete();
+      await knex(tables.oefening).whereIn('id', dataToDelete.oefeningen).delete();
       await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
       await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
-    it('should return 200 and return the updated toestel', async () => {
+    it('should return 200 and return the updated oefening', async () => {
       const response = await request.put(`${url}/4`)
         .send({
-          type: 'bodyweight',
-          locatie_id: 2,
-        }).set('Authorization', authHeader)
+          id: 6,
+          spiergroep: 'quadriceps',
+          moeilijkheidsgraad: 'medium',
+          toestel_id: 2,
+        }).set('Authorization', authHeader);
 
       expect(response.status).toBe(200);
       expect(response.body.id).toBeTruthy();
-      expect(response.body.type).toBe('bodyweight');
-      expect(response.body.locatie_id).toBe(2);
+      expect(response.body.spiergroep).toBe('quadriceps');
+      expect(response.body.moeilijkheidsgraad).toBe('medium');
+      expect(response.body.toestel_id).toBe(2);
     });
 
   });
 
   // delete testen
-  describe('DELETE /api/locaties/:id', () => {
+  describe('DELETE /api/oefeningen/:id', () => {
 
     beforeAll(async () => {
       await knex(tables.locatie).insert(data.locaties);
       await knex(tables.toestel).insert(data.toestellen);
-      await knex(tables.toestel).insert([{
-        id: 4,
-        type: 'bodyweight',
-        locatie_id: 2
+      await knex(tables.oefening).insert(data.oefeningen);
+      await knex(tables.oefening).insert([{
+        id: 6,
+        spiergroep: 'quadriceps',
+        moeilijkheidsgraad: 'medium',
+        toestel_id: 2,
       }]);
     })
 
     afterAll(async () => {
+      await knex(tables.oefening).whereIn('id', dataToDelete.oefeningen).delete();
       await knex(tables.toestel).whereIn('id', dataToDelete.toestellen).delete();
       await knex(tables.locatie).whereIn('id', dataToDelete.locaties).delete();
     })
 
     it('should return 204 and return nothing', async () => {
-      const response = await request.delete(`${url}/4`).set('Authorization', authHeader);
+      const response = await request.delete(`${url}/6`).set('Authorization', authHeader);
 
       expect(response.status).toBe(204);
       expect(response.body).toEqual({});

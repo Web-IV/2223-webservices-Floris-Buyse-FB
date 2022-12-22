@@ -4,6 +4,12 @@ const installOefeningRouter = require('./_oefeningen');
 const installHealthRouter = require('./_health');
 const Router = require('@koa/router');
 
+/**
+ * @api {koa} app Install all the routes in the application
+ * @apiName installRoutes
+ * @apiGroup Routing
+ */
+
 module.exports = (app) => {
   const router = new Router({
     prefix: '/api'

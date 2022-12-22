@@ -7,6 +7,13 @@ const {
   permissions
 } = require('../core/auth');
 
+/**
+ * @api {GET} /toestellen Get information about all the toestellen
+ * @apiName getToestellen
+ * @apiGroup Toestellen
+ * 
+ */
+
 const getToestellen = async (ctx) => {
   ctx.body = await toestelService.getAll();
 };
@@ -18,6 +25,14 @@ getToestellen.validationScheme = {
   }).and('limit', 'offset'),
 }
 
+/**
+ * @api {GET} /toestellen/:id Get information about a specific toestel
+ * @apiName getToestellenById
+ * @apiGroup Toestellen
+ * 
+ * @apiParam {Number} id Locatie id
+ */
+
 const getToestellenById = async (ctx) => {
   ctx.body = await toestelService.getById(ctx.params.id);
 };
@@ -27,6 +42,21 @@ getToestellenById.validationScheme = {
     id: Joi.number().invalid(0).integer().positive()
   })
 }
+
+/**
+ * @api {POST} /toestellen Create a new toestel
+ * @apiName createToestel
+ * @apiGroup Toestellen
+ * 
+ * @apiParam {String} type Bodyweight or free weight excercise
+ * @apiParam {Number} locatie_id id of the location where this toestel is
+ * 
+ * @apiParamExample {json} Post JSON-body text example:
+ *     {
+ *       "type": "bodyweight",
+ *       "locatie_id": 2,
+ *     }
+ */
 
 const createToestel = async (ctx) => {
   ctx.body = await toestelService.create({
@@ -41,6 +71,14 @@ createToestel.validationScheme = {
   }
 }
 
+/**
+ * @api {DELETE} /toestellen/:id Delete a specific toestel
+ * @apiName deleteToestel
+ * @apiGroup Toestellen
+ * 
+ * @apiParam {Number} id Toestel id
+ */
+
 const deleteToestel = async (ctx) => {
   await toestelService.deleteById(ctx.params.id);
   ctx.status = 204;
@@ -51,6 +89,16 @@ deleteToestel.validationScheme = {
     id: Joi.number().invalid(0).integer().positive()
   })
 }
+
+/**
+ * @api {PUT} /toestellen/:id Update a specific toestel
+ * @apiName updateToestel
+ * @apiGroup Toestellen
+ * 
+ * @apiParam {Number} id Toestel id
+ * @apiParam {String} type Bodyweight or free weight excercise
+ * @apiParam {Number} locatie_id id of the location where this toestel is
+ */
 
 const updateToestel = async (ctx) => {
   ctx.body = await toestelService.updateById(ctx.params.id, {
