@@ -43,6 +43,11 @@ AUTH_TOKEN_URL='____'
 - AUTH_USER_INFO is ```https://tenantOpAuth0/userinfo```
 - AUTH_CLIENT_ID en AUTH_CLIENT_SECRET kan je vinden op je auth0 dashboard bij de applicatie
 - AUTH_TOKEN_URL is ```https://tenantOpAuth0/oauth/token```
+3. Om op te starten in development environment type: ``yarn start``
+4. Om op te starten in production environment type: ``yarn start:prod``
+5. Om de documentatie aan te vullen type: ``yarn docs``
+
+
 
 ## Testen
 
@@ -75,3 +80,6 @@ AUTH_TEST_USER_PASSWORD=____
 Alle auth info blijft hetzelfde als bij `Opstarten`, behalve op het einde zijn er 3 nieuwe bijgekomen:
  - De AUTH_TEST_USER_USER_ID kan je zelf kiezen (bvb 123)
  - AUTH_TEST_USER_USERNAME en AUTH_TEST_USER_PASSWORD kan je vinden in het dossier bij inloggegevens
+
+ 2. Om de tests te runnen type: ``yarn test``
+ 3. Om ook de coverage te kunnen zien type: ``yarn test:coverage``
